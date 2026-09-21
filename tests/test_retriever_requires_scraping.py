@@ -117,6 +117,7 @@ def test_base_class_requires_a_search_method():
     "import_path, cls_name, expected",
     [
         ("gpt_researcher.retrievers.tavily.tavily_search", "TavilySearch", True),
+        ("gpt_researcher.retrievers.anysearch.anysearch", "AnySearch", True),
         ("gpt_researcher.retrievers.searx.searx", "SearxSearch", True),
         ("gpt_researcher.retrievers.duckduckgo.duckduckgo", "Duckduckgo", True),
         ("gpt_researcher.retrievers.pubmed_central.pubmed_central", "PubMedCentralSearch", False),

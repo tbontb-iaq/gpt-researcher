@@ -34,6 +34,7 @@ Thanks to our community, we have integrated the following web search engines and
 - [Brave Search](https://brave.com/search/api/) - Env: `RETRIEVER=brave` and `BRAVE_API_KEY`
 - [GroundRoute](https://groundroute.ai/) - Env: `RETRIEVER=groundroute` and `GROUNDROUTE_API_KEY`
 - [BoCha](https://bochaai.com/) - Env: `RETRIEVER=bocha` and `BOCHA_API_KEY`
+- [AnySearch](https://anysearch.com/) - Env: `RETRIEVER=anysearch` - [Setup Guide](#anysearch)
 - [Google](https://developers.google.com/custom-search/v1/overview) - Env: `RETRIEVER=google`
 - [SearchApi](https://www.searchapi.io/) - Env: `RETRIEVER=searchapi`
 - [Serp API](https://serpapi.com/) - Env: `RETRIEVER=serpapi`
@@ -142,5 +143,34 @@ RETRIEVER=pubmed_central
 NCBI_API_KEY=your_api_key_here      # Optional; improves NCBI rate limits
 PUBMED_DB=pmc                       # Optional; defaults to pmc
 ```
+
+### AnySearch
+
+[AnySearch](https://anysearch.com/) is a real-time web search API. It offers a
+small anonymous daily quota for trying it out; set a (free) API key for
+reliable use and higher rate limits.
+
+```bash
+RETRIEVER=anysearch
+ANYSEARCH_API_KEY=your_api_key_here  # https://anysearch.com/console/api-keys
+```
+
+The companion `SCRAPER=anysearch_extract` routes page fetching through
+AnySearch's extract endpoint, which returns pages as clean Markdown.
+
+**Maintenance notes** (for future maintainers of this integration):
+
+- Endpoint: `POST /v1/search` with `{"query": ..., "max_results": 1-10}`;
+  the scraper uses `POST /v1/extract` with `{"url": ...}`. Both respond with
+  an envelope `{"code": 0, "data": ...}`; a non-zero `code` is an API error
+  even on HTTP 200. Full API reference: https://anysearch.com/docs.
+- Optional `Authorization: Bearer <key>` header when `ANYSEARCH_API_KEY` is
+  set; no header for anonymous access.
+- Results are normalized to the shared `title`/`href`/`body` contract; rows
+  without a URL are skipped so one bad row cannot drop a whole result page.
+- Registration points: `gpt_researcher/retrievers/anysearch/`,
+  `retrievers/utils.py` (`VALID_RETRIEVERS`), `actions/retriever.py`
+  (`get_retriever`), and `scraper/anysearch_extract/` + `SCRAPER_CLASSES`
+  for the extract scraper.
 
 Missing a retriever? Feel free to contribute to this project by submitting issues or pull requests on our [GitHub](https://github.com/assafelovic/gpt-researcher) page.

@@ -32,6 +32,11 @@ You can choose your preferred scraping method by setting the `SCRAPER` environme
    export SCRAPER="firecrawl"
    ```
 
+4. [AnySearch](https://anysearch.com) also offers a hosted extract service that returns pages as clean Markdown. No extra pip package is needed. The anonymous tier has a small daily quota; once it is exhausted the API returns HTTP 402, so setting a (free) `ANYSEARCH_API_KEY` is recommended for this scraper:
+   ```bash
+   export SCRAPER="anysearch_extract"
+   ```
+
 Note: If not set, GPT Researcher will default to BeautifulSoup for scraping.
 
 ## Scraping Methods Explained
